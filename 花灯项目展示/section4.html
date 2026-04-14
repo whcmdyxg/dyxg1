@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>薪火永续</title>
+    <link rel="stylesheet" href="./css/index.css">
+	<link rel="stylesheet" href="./css/section4.css">
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        /* 新增：标题两侧灯笼样式 */
+        .page-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px; /* 灯笼与标题的间距 */
+            flex-wrap: wrap; /* 适配小屏幕 */
+        }
+        .page-title h1 {
+            margin: 0;
+            font-size: 36px; /* 标题字号可根据需求调整 */
+        }
+        .lantern-icon {
+            width: 60px; /* 灯笼图片尺寸 */
+            height: auto;
+            display: block;
+        }
+        /* 小屏幕适配：灯笼变小，标题居中 */
+        @media (max-width: 768px) {
+            .lantern-icon {
+                width: 40px;
+            }
+            .page-title h1 {
+                font-size: 28px;
+            }
+            .page-title {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .page-title p {
+                margin-top: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script src="./js/navbar.js"></script>
+
+    <!-- ========== 页面标题（添加灯笼图片） ========== -->
+    <div class="page-title" style="margin-top: 100px;">
+        <!-- 左侧灯笼 -->
+        <img src="./img/section4/灯笼.jpg" alt="灯笼" class="lantern-icon">
+        <div class="title-content">
+            <h1>薪火永续</h1>
+            <p>铭记花灯传承人故事，感悟非遗技艺的传承与坚守</p>
+        </div>
+        <!-- 右侧灯笼 -->
+        <img src="./img/section4/灯笼.jpg" alt="灯笼" class="lantern-icon">
+    </div>
+
+    <!-- ========== 核心内容容器 ========== -->
+    <div class="inherit-container">
+        <!-- 模块标题 -->
+        <h2 class="module-title">花灯传承人 · 岁月留声</h2>
+
+        <!-- 核心：传承人列表（移除时间轴，重构布局） -->
+        <div class="inheritor-list">
+            <!-- 第一代传承人 -->
+            <div class="inheritor-item">
+                <!-- 左侧：名称 + 图片 -->
+                <div class="inheritor-left">
+                    <div class="name-wrapper">
+                        <h3 class="card-title">彭先金</h3>
+                        <div class="card-era">潜江花灯市级传承人</div>
+                    </div>
+                    <div class="avatar-wrapper">
+                        <img src="./img/section4/彭先金.png" alt="潜江花灯市级传承人彭先金" class="timeline-img">
+                    </div>
+                </div>
+                <!-- 右侧：完整介绍 + 视频 -->
+                <div class="inheritor-right">
+                    <p class="card-desc">
+                        潜江花灯市级非遗传承人，湖北潜江竹根滩人，现居园林街道徐角社区。他自幼浸润于元宵灯会氛围，早年拜师学艺，精通花灯制作全套工序，尤其擅长大型灯组设计。他秉持“传统为本、创新为用”理念，融合传统工艺与现代技术，打造的《潜江海马》灯组成为2025年潜江灯会爆款；常年以家庭+师徒模式传承技艺，带动7位家人投身其中，免费推广花灯技艺，是潜江花灯文化的核心守护者与推广者。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 第二代传承人 -->
+            <div class="inheritor-item">
+                <div class="inheritor-left">
+                    <div class="name-wrapper">
+                        <h3 class="card-title">张克华</h3>
+                        <div class="card-era">潜江花灯张氏第三代传承人</div>
+                    </div>
+                    <div class="avatar-wrapper">
+                        <img src="./img/section4/张克华.png" alt="潜江花灯张氏第三代传承人张克华" class="timeline-img">
+                    </div>
+                </div>
+                <div class="inheritor-right">
+                    <p class="card-desc">
+潜江市市级非物质文化遗产（纸折花瓶）代表性传承人，约73岁，潜江市龙湾镇柴铺村6组人。他学仿古建筑工程出身，精通木工、扎架、手绘等传统工艺，折纸、扎灯技艺源自家族传承，自爷爷辈传下。其核心绝活是扑克牌折纸艺术与传统花灯制作，代表作品有“玉龙盘柱”抱柱灯、“千古章华灯”，常年以师带徒形式授艺，坚持纯手工制作，承接多地花灯制作任务，多次参与潜江灯会及非遗展演，秉持手工艺术无价的创作理念，守护传承本土非遗文化。                    </p>
+                </div>
+            </div>
+
+            <!-- 第三代传承人 -->
+            <div class="inheritor-item">
+                <div class="inheritor-left">
+                    <div class="name-wrapper">
+                        <h3 class="card-title">程崇尚</h3>
+                        <div class="card-era">潜江花灯程氏第四代传承人</div>
+                    </div>
+                    <div class="avatar-wrapper">
+                        <img src="./img/section4/%E7%A8%8B%E5%B4%87%E5%B0%9A.png" alt="潜江花灯程氏第四代传承人程崇尚" class="timeline-img">
+                    </div>
+                </div>
+                <div class="inheritor-right">
+                    <p class="card-desc">
+1945年生，潜江花灯市级非遗代表性传承人，潜江花灯程氏家族第四代传人，也是潜江灯会1978年恢复以来的核心策划者与组织者。他出身手工业者家庭，自幼受家族技艺熏陶，精通多种传统花灯工艺，还融入现代技术创新，代表作品有《鹬蚌相争灯》《麒麟送子》等。其作品曾赴多国巡展，他培养家族传承梯队，开展非遗教学，参与制定制作规范，为潜江花灯传承、创新及申遗提供重要支撑，现任潜江市花灯研究会副会长。                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新增：传承人采访视频模块 -->
+        <h2 class="module-title">传承人专访 · 声影留存</h2>
+        <div class="inheritor-interview">
+            <div class="interview-video-wrapper">
+                <!-- 替换为实际的采访视频地址 -->
+                <video class="interview-video-content" controls poster="./img/video/主视频3.mp4">
+                    <source src="./img/video/主视频3.mp4" type="video/mp4">
+                    你的浏览器不支持HTML5视频播放，请升级浏览器
+                </video>
+                <div class="video-desc">
+                    潜江花灯传承人独家专访：讲述与花灯相伴的岁月，分享技艺传承的坚守与创新
+                </div>
+            </div>
+        </div>
+
+        <!-- 主题升华：非遗传承思考 -->
+        <div class="inherit-thought">
+            <h3 class="thought-title">薪火相传，不负韶华</h3>
+            <div class="thought-content">
+                <p>从张克华的手工坚守、程崇尚的承上启下到彭先金的守正创新，三位潜江花灯传承人的故事，是一部潜江花灯的发展史，更是一部中国非遗技艺的传承史。非遗的传承，从来不是墨守成规的复制，而是在坚守中创新，在创新中坚守。
+        老一代传承人张克华，以73岁高龄坚守纯手工技艺，从扑克牌折纸到传统花灯制作，延续家族传承，用双手留住技艺根脉，是非遗文化的“活化石”；中生代传承人程崇尚，作为程氏第四代传人，深耕花灯事业数十年，既是潜江灯会的核心组织者，也是技艺创新的推动者，让潜江花灯走出国门、走向更广阔的舞台；新生代传承力量的代表彭先金，以家庭与师徒传承并行，融合传统工艺与现代技术，用爆款灯组为古老技艺注入新鲜活力，让花灯在新时代焕发新生。
+        花灯传承，不仅是技艺的传递，更是文化的延续。它承载着江汉平原的水乡风情与楚韵文脉，寄托着潜江人对平安丰收、美好生活的向往，是民族文化基因的重要组成部分。所谓“薪火永续”，便是让张克华、程崇尚、彭先金这样的每一代传承人，都能接过手中的“火把”，让潜江花灯的古老技艺在时光的长河中，永远闪耀着温暖的光芒，让这份非遗文化，在新时代绽放出更加绚丽的光彩。</p>
+            </div>
+        
+            <!-- 四张并排图片 -->
+            <div class="heritage-images-row">
+                <img src="./img/section4/传承1.jpg" alt="花灯传承">
+                <img src="./img/section4/传承2.jpg" alt="花灯传承">
+                <img src="./img/section4/传承3.jpg" alt="花灯传承">
+                <img src="./img/section4/传承4.jpg" alt="花灯传承">
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 页面专属JS ========== -->
+    <script>
+        // 采访视频加载容错处理
+        const interviewVideo = document.querySelector('.interview-video-content');
+        if (interviewVideo) {
+            interviewVideo.addEventListener('error', () => {
+                interviewVideo.parentNode.innerHTML = '<div style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; color: #e0d8c8; font-size: 16px; padding: 20px;">采访视频加载失败，请检查视频地址</div>';
+            });
+        }
+    </script>
+</body>
+</html>

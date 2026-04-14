@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灯影寻根</title>
+    <!-- 你的原始样式（无任何修改） -->
+    <link rel="stylesheet" href="./css/section1.css">
+    <!-- 调整后的悬停样式 -->
+    <link rel="stylesheet" href="./css/timeline-hover.css">
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        /* 新增：轮播图 + 文字 布局样式 */
+        .carousel-text-section {
+            max-width: 1200px;
+            margin: 60px auto;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            padding: 0 20px;
+        }
+        /* 轮播图容器 */
+        .carousel-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        /* 轮播图片包裹层 */
+        .carousel-wrapper {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 350px;
+        }
+        .carousel-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        /* 轮播按钮 */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .prev-btn { left: 10px; }
+        .next-btn { right: 10px; }
+        /* 右侧固定文字 */
+        .fixed-text {
+            flex: 1;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+        }
+        .fixed-text h3 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            color: #900;
+        }
+
+        /* ========== 新增：视频下方 文字介绍 + 新闻政策 ========== */
+        .info-news-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            display: flex;
+            gap: 30px;
+            padding: 0 20px;
+        }
+        /* 左侧文字介绍 */
+        .intro-box {
+            flex: 1.2;
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #900;
+        }
+        .intro-box h3 {
+            font-size: 22px;
+            color: #900;
+            margin-bottom: 15px;
+        }
+        .intro-box p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #444;
+        }
+        /* 右侧新闻政策 */
+        .news-box {
+            flex: 1;
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #ff6600;
+        }
+        .news-box h3 {
+            font-size: 22px;
+            color: #ff6600;
+            margin-bottom: 15px;
+        }
+        .news-list {
+            list-style: none;
+            padding: 0;
+        }
+        .news-list li {
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+        }
+        .news-list a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+        .news-list a:hover {
+            color: #ff6600;
+            padding-left: 5px;
+        }
+
+        /* ========== 修改后：底部合适尺寸轮播图（不铺满） ========== */
+        .bottom-carousel {
+            max-width: 1000px; /* 控制最大宽度，不铺满 */
+            margin: 50px auto; /* 居中 */
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .bottom-wrapper {
+            display: flex;
+            transition: transform 0.6s ease;
+            height: 500px; /* 控制高度，可自行修改 */
+        }
+        .bottom-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 保持图片比例不变形 */
+            flex-shrink: 0;
+        }
+		.module-title {
+		    text-align: center;
+		    margin: 40px 0 20px;
+		    font-size: 24px;
+		    color: #b22626;
+		}
+		.history-trace, .folk-story {
+		    max-width: 1100px;
+		    margin: 0 auto;
+		    line-height: 1.8;
+		    font-size: 16px;
+		    color: #444;
+		    padding: 0 20px;
+		}
+		.story-imgs {
+		    text-align: center;
+		    margin: 20px 0;
+		}
+		.story-img {
+		    max-width: 100%;
+		    border-radius: 10px;
+		}
+		/* 视频样式（和原来图片一样大小） */
+		.story-video {
+		    max-width: 100%;
+		    border-radius: 10px;
+		    display: block;
+		    margin: 0 auto;
+		}
+		.story-text {
+		    color: #e0d8c8;
+		    line-height: 1.8;
+		}
+		
+		.story-text h4 {
+		    color: #fad689;
+		    margin: 0 0 15px;
+		    font-size: 18px;
+		}
+		.trace-content {
+		    display: flex;
+		    flex-direction: column;
+		    gap: 20px;
+		    line-height: 1.8;
+		    color: #e0d8c8;
+		}
+		
+		.trace-content p {
+		    margin: 0;
+		    text-indent: 2em;
+		}
+		/* 4. 民俗故事模块 - 双图+文字 */
+		.folk-story {
+		    background-color: rgba(45, 37, 31, 0.5);
+		    border-radius: 12px;
+		    padding: 30px;
+		    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+		}
+    </style>
+</head>
+<body>
+    <script src="./js/navbar.js"></script>
+
+    <div class="page-title">
+        <h1>灯影寻根</h1>
+        <p>探寻花灯千年历史，邂逅数字化新机遇</p>
+    </div>
+
+    <!-- 核心时间轴（内容外置，不遮挡） -->
+    <div class="ruler-timeline">
+        <div class="ruler-body">
+            <!-- 刻度（原始样式不变） -->
+            <div class="ruler-tick" style="left: 10%;"></div>
+            <div class="ruler-tick long" style="left: 20%;"></div>
+            <div class="ruler-tick" style="left: 30%;"></div>
+            <div class="ruler-tick long" style="left: 40%;"></div>
+            <div class="ruler-tick" style="left: 50%;"></div>
+            <div class="ruler-tick long" style="left: 60%;"></div>
+            <div class="ruler-tick" style="left: 70%;"></div>
+            <div class="ruler-tick long" style="left: 80%;"></div>
+            <div class="ruler-tick" style="left: 90%;"></div>
+
+            <!-- 1. 汉代（奠基期） -->
+            <div class="ruler-dot" style="left: 20%;" data-period="han"></div>
+            <div class="ruler-year" style="left: 20%;">汉代（奠基期）</div>
+            <!-- 图片：时间轴上方外置 -->
+            <div class="hover-images" id="han-images" style="left: 20%;">
+                <div class="hover-img-item"><img src="./img/section1/1.png" alt="汉代花灯雏形"></div>
+                <div class="hover-img-item"><img src="./img/section1/2.png" alt="汉代宫灯"></div>
+                <div class="hover-img-item"><img src="./img/section1/3.png" alt="汉代青铜灯"></div>
+            </div>
+            <!-- 文字：时间轴下方外置 -->
+            <div class="hover-text" id="han-text" style="left: 20%;">
+                <h3>汉代（奠基期）</h3>
+                <p>汉代是中国灯具发展的重要时期，以青铜灯具为代表，造型端庄、功能完善，兼具照明、环保与审美价值。长信宫灯、铜牛灯、朱雀灯等器物，结构精巧、纹饰典雅，将实用功能与艺术造型完美结合，虽非传统意义上的花灯，却为后世灯艺的发展奠定了造型、结构、工艺的基础，是灯文化从实用走向艺术的开端。
+</p>
+            </div>
+
+            <!-- 2. 宋元（成熟期） -->
+            <div class="ruler-dot" style="left: 40%;" data-period="songyuan"></div>
+            <div class="ruler-year" style="left: 40%;">宋元（成熟期）</div>
+            <div class="hover-images" id="songyuan-images" style="left: 40%;">
+                <div class="hover-img-item"><img src="./img/section1/4.png" alt="宋代走马灯"></div>
+                <div class="hover-img-item"><img src="./img/section1/5.png" alt="元代花灯市集"></div>
+                <div class="hover-img-item"><img src="./img/section1/6.png" alt="宋元花灯工艺"></div>
+            </div>
+            <div class="hover-text" id="songyuan-text" style="left: 40%;">
+                <h3>宋元（成熟期）</h3>
+                <p>宋代民间经济繁荣，花灯工艺进入鼎盛时期。走马灯、无骨灯、琉璃灯、万眼罗灯等纷纷出现，工艺精巧、种类繁多。走马灯利用热力驱动旋转，体现了古人的智慧；无骨灯、罗帛灯以细腻做工见长，光影通透。花灯不再局限于宫廷，深入市井街巷，成为全民参与的节庆艺术，为后世民间花灯发展提供了丰富范式。
+</p>
+            </div>
+
+            <!-- 3. 明清（繁荣期） -->
+            <div class="ruler-dot" style="left: 60%;" data-period="mingqing"></div>
+            <div class="ruler-year" style="left: 60%;">明清（繁荣期）</div>
+            <div class="hover-images" id="mingqing-images" style="left: 60%;">
+                <div class="hover-img-item"><img src="./img/section1/7.png" alt="明清宫灯"></div>
+                <div class="hover-img-item"><img src="./img/section1/77.jpg" alt="明清花灯市集"></div>
+                <!-- <div class="hover-img-item"><img src="./img/section1/6.jfif" alt="明清花灯工艺"></div> -->
+            </div>
+            <div class="hover-text" id="mingqing-text" style="left: 60%;">
+                <h3>明清（繁荣期）</h3>
+                <p>明清时期，花灯工艺进一步成熟，料丝灯、宫灯、鳌山灯等大型灯组盛行。宫灯典雅华贵，成为厅堂陈设；鳌山灯气势恢宏，集百灯于一体，构成壮观灯景。民间扎灯、舞灯、赏灯习俗趋于完整，灯与民俗、祭祀、表演深度结合，形成体系完整、地域鲜明的灯文化，为各地传统花灯（包括潜江花灯）提供了直接传承的土壤。
+</p>
+            </div>
+
+            <!-- 4. 现当代 -->
+            <div class="ruler-dot" style="left: 80%;" data-period="modern"></div>
+            <div class="ruler-year" style="left: 80%;">现当代</div>
+            <div class="hover-images" id="modern-images" style="left: 80%;">
+                <div class="hover-img-item"><img src="./img/section1/8.png" alt="现代花灯展览"></div>
+                <div class="hover-img-item"><img src="./img/section1/8.jpg" alt="数字花灯"></div>
+                <div class="hover-img-item"><img src="./img/section1/9.jpg" alt="非遗花灯传承"></div>
+            </div>
+            <div class="hover-text" id="modern-text" style="left: 80%;">
+                <h3>现当代</h3>
+                <p>现代花灯在继承传统工艺的基础上，融入LED 光源、动态机械、地域文化等元素，造型更大、效果更炫、主题更鲜明。从传统龙灯、蚌壳灯到地方特色灯组，再到城市灯会，花灯既保留非遗根脉，又贴合当代审美，成为展示地域文化、传承民俗精神的重要载体，在新时代焕发新的光彩。
+</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================== 新增：轮播图 + 固定文字 区域 ====================== -->
+    <div class="carousel-text-section">
+        <!-- 左侧轮播图 -->
+        <div class="carousel-container">
+            <div class="carousel-wrapper" id="carouselWrapper">
+                <img src="./img/carousel/1.jpg" alt="花灯展示">
+                <img src="./img/carousel/2.jpg" alt="花灯工艺">
+                <img src="./img/carousel/3.jpg" alt="花灯展览">
+				<img src="./img/carousel/4.jpg" alt="花灯工艺">
+				<img src="./img/carousel/5.jpg" alt="花灯展览">
+            </div>
+            <button class="carousel-btn prev-btn" id="prevBtn"><</button>
+            <button class="carousel-btn next-btn" id="nextBtn">></button>
+        </div>
+
+        <!-- 右侧固定文字 -->
+        <div class="fixed-text">
+            <h3>花灯文化·潜江花灯巡游</h3>
+            <p>潜江花灯巡游是国家级非遗 “潜江灯会” 的核心民俗活动。夜幕降临，各式传统花灯流光溢彩、巡游队伍盛装行进，灯火璀璨、热闹喜庆，生动展现江汉平原独特灯韵与非遗活态传承的时代活力。</p>
+        </div>
+    </div>
+    <!-- ======================================================================== -->
+
+    <!-- 视频区域（原始样式不变） -->
+    <div class="video-container">
+        <img src="https://picsum.photos/seed/lantern-video/1200/675" alt="花灯文化短视频预览" class="video-cover" id="videoCover">
+        <div class="play-btn" id="playBtn"><span></span></div>
+        <video class="main-video" id="mainVideo" controls style="display: none;">
+            <source src="./img/video/主视频1.mp4" type="video/mp4">
+            你的浏览器不支持HTML5视频播放，请更换现代浏览器尝试。
+        </video>
+    </div>
+
+    <!-- <div class="video-desc">
+        <h3>花灯千年脉络 · 数字化新篇</h3>
+        <p>本视频融合传统动画与实地实拍，用2分钟时间梳理花灯从汉唐宫廷到民间市井的千年发展脉络，同时展现当代数字化技术对传统花灯文化的赋能——3D建模、数字展览、线上互动等新形式，让古老花灯在数字时代重焕生机，实现文化传承与创新的双向奔赴。</p>
+    </div> -->
+
+    <!-- ====================== 新增：视频下方 文字介绍 + 新闻政策 ====================== -->
+    <div class="info-news-section">
+        <!-- 左侧：文字介绍区 -->
+        <div class="intro-box">
+            <h3>潜江花灯文化介绍</h3>
+            <p>潜江花灯是江汉平原极具代表性的民间传统艺术，文脉绵延千年，自唐宋萌芽，于明清兴盛，世代相传、经久不衰，深深扎根于楚文化与水乡民俗之中。2021 年，潜江灯会（潜江花灯）正式入选第五批国家级非物质文化遗产代表性项目名录，成为荆楚地区重要的非遗文化名片。花灯集扎制、裱糊、彩绘等传统工艺于一体，造型精美、寓意吉祥，根植于民间岁时习俗，多用于元宵灯会、节庆巡游、祈福纳祥，象征迎福纳瑞、阖家安康，承载着百姓对风调雨顺、生活美满的朴素期盼，更维系着乡土情感、族群记忆与文化认同。历经岁月沉淀，潜江花灯早已不只是一门手工技艺，更是一方地域的文化符号与精神载体，在现代传承与创新中持续焕发活力。</p>
+        </div>
+
+        <!-- 右侧：新闻政策（可点击跳转） -->
+        <div class="news-box">
+            <h3>新闻政策</h3>
+            <ul class="news-list">
+                <li><a href="https://www.ihchina.cn/project_details/23878.html" target="_blank">潜江灯会入选国家级非物质文化遗产代表性项目名录</a></li>
+                <li><a href="https://news.hubeidaily.net/mobile/c_4855791.html" target="_blank">2026潜江灯会花灯征集帖，邀您共赴光影盛宴！</a></li>
+                <li><a href="https://news.hubeidaily.net/pc/c_5111984.html" target="_blank">灯会+商圈+补贴！潜江这样打开春节</a></li>
+                <li><a href="https://www.hbqj.gov.cn/blhq/zfxxgk/fdzdgknr/gysyjs_34501/ggwhty/202602/t20260202_5867810.html" target="_blank">2026潜江灯会即将盛大启幕，欢迎您到潜江来！</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- ============================================================================ -->
+
+    <!-- ====================== 底部轮播图 ====================== -->
+    <div class="bottom-carousel">
+        <div class="bottom-wrapper" id="bottomWrapper">
+            <img src="./img/downCarousel/1.png" alt="花灯全景">
+            <img src="./img/downCarousel/2.jpg" alt="灯会现场">
+            <img src="./img/downCarousel/3.png" alt="非遗传承">
+            <img src="./img/downCarousel/4.png" alt="数字花灯">
+			<img src="./img/downCarousel/5.png" alt="灯会现场">
+			<img src="./img/downCarousel/6.jpg" alt="非遗传承">
+			<img src="./img/downCarousel/7.png" alt="数字花灯">
+        </div>
+        <button class="carousel-btn prev-btn" id="bottomPrev"><</button>
+        <button class="carousel-btn next-btn" id="bottomNext">></button>
+    </div>
+	
+	<!-- 4. 民俗故事模块 → 图片已换成视频！！！ -->
+	<h2 class="module-title">民俗故事 · 民间传说</h2>
+	<div class="folk-story">
+	    <div class="story-imgs">
+	        <!-- 这里原来的图片换成了视频 -->
+	        <video class="story-video" controls>
+	            <source src="./img/video/民俗故事.mp4" type="video/mp4">
+	            你的浏览器不支持视频播放
+	        </video>
+	    </div>
+	    <div class="story-text">
+	        <h4>潜江花灯的由来：渔翁与荷花灯的传说</h4>
+			<div class="trace-content">
+	        <p>相传在远古时期，潜江龙湾一带还是一片沼泽密布、稻禾稀疏的荒滩，百姓以农耕渔猎为生，却常年受旱涝之灾困扰——要么烈日炎炎、稻田干裂，颗粒无收；要么暴雨倾盆、洪水泛滥，家园被淹。百姓们终日祈福，期盼能有神灵庇佑，让这片土地风调雨顺、五谷丰登。</p>
+			<p>一日深夜，狂风大作、电闪雷鸣，一道金光划破夜空，轰然坠落在龙湾镇的田野之上。次日清晨，百姓们纷纷前往查看，只见一条通体苍劲、鳞爪分明的巨龙，奄奄一息地卧在稻田旁，龙身布满伤痕，气息微弱，显然是受了重伤，从九天之上坠落至此。百姓们素来敬畏龙神，见此情景，无不心生怜悯，纷纷议论：“这是行云布雨的苍龙啊，它一定是为了护佑我们，才受伤坠落的。”</p>
+			<p>彼时正值深秋，稻田里的稻草刚刚收割完毕，金黄饱满，百姓们来不及多想，纷纷抱来自家的稻草，一层层、一圈圈地覆盖在苍龙的身上，为它御寒暖身、遮挡风雨；又打来清澈的湖水，小心翼翼地擦拭它身上的伤口，焚香祈祷，希望苍龙能早日痊愈。就这样，百姓们日复一日地守护着苍龙，白天轮流值守，夜晚点燃火把，生怕它再受一丝伤害，就连孩童们也懂事地不吵闹、不靠近，只远远地为苍龙祈福。</p>
+			<p>过了七七四十九天，苍龙终于缓缓睁开双眼，它看着围在身边、满脸虔诚的百姓，又看了看这片被稻草覆盖、充满暖意的土地，眼中满是感激。只见它缓缓起身，舒展龙身，一声长鸣响彻云霄，周身泛起金光，随后腾空而起，盘旋在龙湾镇的上空。刹那间，乌云汇聚，甘霖倾泻而下，滋润着干裂的稻田；原本泛滥的沼泽，也渐渐变得平缓，化作了肥沃的良田。</p>
+			<p>苍龙升空后，又盘旋了三圈，仿佛在向百姓们告别，随后便消失在天际。自那以后，龙湾一带再也没有遭遇过大的旱涝之灾，稻田年年丰收，百姓们安居乐业，过上了丰衣足食的生活。百姓们为了纪念苍龙的庇佑，也为了铭记稻草护龙的恩情，便决定每年春节期间，用稻草扎制成龙的形状，模仿苍龙的姿态舞动，称之为“草把龙灯”；而龙湾镇，也因“苍龙坠落此地”的传说，得名“龙落湾”，后来渐渐简化为“龙湾”，沿用至今。</p>
+			</div>
+		</div>
+	</div>
+	
+    <!-- ================================================================== -->
+
+    <!-- 稳定版交互逻辑（无闪烁、必显示） -->
+    <script>
+        // 时间轴交互核心
+        const dots = document.querySelectorAll('.ruler-dot');
+        const years = document.querySelectorAll('.ruler-year');
+        
+        // 显示指定时期的内容
+        function showContent(period) {
+            // 先隐藏所有
+            document.querySelectorAll('.hover-images').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.hover-text').forEach(el => el.style.display = 'none');
+            // 显示当前
+            const imgEl = document.getElementById(`${period}-images`);
+            const textEl = document.getElementById(`${period}-text`);
+            if (imgEl) imgEl.style.display = 'flex';
+            if (textEl) textEl.style.display = 'block';
+        }
+
+        // 隐藏所有内容
+        function hideAllContent() {
+            document.querySelectorAll('.hover-images').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.hover-text').forEach(el => el.style.display = 'none');
+        }
+
+        // 绑定圆点事件
+        dots.forEach(dot => {
+            dot.addEventListener('mouseenter', () => {
+                const period = dot.getAttribute('data-period');
+                showContent(period);
+            });
+            dot.addEventListener('mouseleave', hideAllContent);
+        });
+
+        // 绑定年份文字事件
+        years.forEach((year, index) => {
+            year.addEventListener('mouseenter', () => {
+                const period = dots[index].getAttribute('data-period');
+                showContent(period);
+            });
+            year.addEventListener('mouseleave', hideAllContent);
+        });
+
+        // 原始视频逻辑（完全不变）
+        const playBtn = document.getElementById('playBtn');
+        const videoCover = document.getElementById('videoCover');
+        const mainVideo = document.getElementById('mainVideo');
+
+        function playVideo() {
+            videoCover.style.display = 'none';
+            playBtn.style.display = 'none';
+            mainVideo.style.display = 'block';
+            mainVideo.play();
+        }
+
+        playBtn.addEventListener('click', playVideo);
+        videoCover.addEventListener('click', playVideo);
+
+        mainVideo.addEventListener('ended', () => {
+            mainVideo.style.display = 'none';
+            videoCover.style.display = 'block';
+            playBtn.style.display = 'flex';
+        });
+
+        // ====================== 新增：上方小轮播图逻辑 ======================
+        const wrapper = document.getElementById('carouselWrapper');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let index = 0;
+        const total = wrapper.children.length;
+
+        // 自动轮播
+        function autoPlay() {
+            index = (index + 1) % total;
+            updateCarousel();
+        }
+        let timer = setInterval(autoPlay, 3000);
+
+        // 更新位置
+        function updateCarousel() {
+            wrapper.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        // 按钮切换
+        prevBtn.addEventListener('click', () => {
+            clearInterval(timer);
+            index = (index - 1 + total) % total;
+            updateCarousel();
+            timer = setInterval(autoPlay, 3000);
+        });
+        nextBtn.addEventListener('click', () => {
+            clearInterval(timer);
+            autoPlay();
+            timer = setInterval(autoPlay, 3000);
+        });
+
+        // ====================== 新增：底部全屏轮播图逻辑 ======================
+        const bottomWrap = document.getElementById('bottomWrapper');
+        const bottomPrev = document.getElementById('bottomPrev');
+        const bottomNext = document.getElementById('bottomNext');
+        let bIndex = 0;
+        const bTotal = bottomWrap.children.length;
+
+        function bottomAutoPlay() {
+            bIndex = (bIndex + 1) % bTotal;
+            bottomWrap.style.transform = `translateX(-${bIndex * 100}%)`;
+        }
+        let bTimer = setInterval(bottomAutoPlay, 4000);
+
+        bottomPrev.addEventListener('click', () => {
+            clearInterval(bTimer);
+            bIndex = (bIndex - 1 + bTotal) % bTotal;
+            bottomWrap.style.transform = `translateX(-${bIndex * 100}%)`;
+            bTimer = setInterval(bottomAutoPlay, 4000);
+        });
+        bottomNext.addEventListener('click', () => {
+            clearInterval(bTimer);
+            bottomAutoPlay();
+            bTimer = setInterval(bottomAutoPlay, 4000);
+        });
+    </script>
+</body>
+</html>

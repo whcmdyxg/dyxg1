@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灯影流光</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/section5.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+        /* 地图模块美化（国风高级样式） */
+        .map-section {
+            max-width: 1000px;
+            margin: 50px auto 60px;
+            padding: 0 20px;
+        }
+
+        .map-section h3 {
+            text-align: center;
+            font-size: 28px;
+            color: #d92c2c;
+            margin-bottom: 12px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+        }
+
+        .map-desc {
+            text-align: center;
+            font-size: 16px;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 地图图片样式 */
+        .map-section img {
+            display: block;
+            width: 100%;
+            max-width: 1000px;
+            height: auto;
+            border-radius: 14px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+            margin: 0 auto 22px;
+            object-fit: cover;
+        }
+
+        /* 信息卡片样式 */
+        .map-info {
+            background: #fff9f0;
+            border-left: 5px solid #f2b83e;
+            padding: 18px 22px;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #333;
+            line-height: 1.9;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .map-info p {
+            margin: 6px 0;
+        }
+
+        .map-info strong {
+            color: #c0392b;
+        }
+		
+		/* 非遗数字资源开放区 - 图片样式*/
+		.resource-section {
+		    max-width: 1000px;
+		    margin: 40px auto;
+		    padding: 0 20px;
+		}
+		.resource-section > h3 {
+		    font-size: 24px;
+		    color: #8B4513;
+		    margin-bottom: 8px;
+		    font-weight: bold;
+		}
+		.resource-section > p {
+		    color: #666;
+		    font-size: 14px;
+		    margin-bottom: 20px;
+		    padding-left: 2px;
+		}
+		/* 折叠面板标题 - 图片同款样式 */
+		.accordion-title {
+		    background: #F9F2D6; /* 浅黄底色，匹配图片 */
+		    color: #333;
+		    padding: 16px 20px;
+		    margin: 8px 0;
+		    border-radius: 8px;
+		    font-weight: 600;
+		    cursor: pointer;
+		    font-size: 16px;
+		    border: 1px solid #E8DFB5;
+		    display: flex;
+		    align-items: center;
+		    gap: 8px;
+		}
+		/* 折叠面板内容 - 配套样式 */
+		.accordion-content {
+		    padding: 20px;
+		    background: #FFFFFF;
+		    border-radius: 8px;
+		    margin-bottom: 8px;
+		    line-height: 1.7;
+		    display: none;
+		    border: 1px solid #F0E6C8;
+		}
+		/* 小图标占位（和图片一致） */
+		.accordion-title::before {
+		    content: "";
+		    display: inline-block;
+		    width: 18px;
+		    height: 18px;
+		    background-size: 100% 100%;
+		    background-repeat: no-repeat;
+		}
+		/* 每个标题专属小图标 */
+		.accordion-title:nth-of-type(1)::before {
+		    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%238B4513' d='M840.4 300H183.6c-19.7 0-35.8 16.1-35.8 35.8v604.4c0 19.7 16.1 35.8 35.8 35.8h656.8c19.7 0 35.8-16.1 35.8-35.8V335.8c0-19.7-16.2-35.8-35.8-35.8zM794.2 855H229.8V395h564.4v460zM264.8 496.9c0-22.1 17.9-40 40-40h128.1c22.1 0 40 17.9 40 40v38.3c0 22.1-17.9 40-40 40H304.8c-22.1 0-40-17.9-40-40v-38.3zm0 153.8c0-22.1 17.9-40 40-40h128.1c22.1 0 40 17.9 40 40v38.3c0 22.1-17.9 40-40 40H304.8c-22.1 0-40-17.9-40-40v-38.3zM660.2 534.9c0-22.1 17.9-40 40-40h128.1c22.1 0 40 17.9 40 40v38.3c0 22.1-17.9 40-40 40H700.2c-22.1 0-40-17.9-40-40v-38.3zm0 153.8c0-22.1 17.9-40 40-40h128.1c22.1 0 40 17.9 40 40v38.3c0 22.1-17.9 40-40 40H700.2c-22.1 0-40-17.9-40-40v-38.3z'/%3E%3C/svg%3E");
+		}
+		.accordion-title:nth-of-type(2)::before {
+		    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23DAA520' d='M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z'/%3E%3Cpath fill='%23DAA520' d='M689.9 469.7l-285.5 165c-10.8 6.2-24.2.8-24.2-12.2V315c0-13 13.4-18.4 24.2-12.2l285.5 165c10.9 6.2 10.9 21.6 0 27.8z'/%3E%3C/svg%3E");
+		}
+		.accordion-title:nth-of-type(3)::before {
+		    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23CD5C5C' d='M904 505H602.7L512 625.9 421.3 505H120c-4.4 0-8-3.6-8-8v-60c0-4.4 3.6-8 8-8h266.5L512 365.1l125.5 66.9H904c4.4 0 8 3.6 8 8v60c0 4.4-3.6 8-8 8zM512 106c-235.5 0-426 190.5-426 426s190.5 426 426 426 426-190.5 426-426S747.5 106 512 106zm0 768c-189.3 0-343-153.7-343-343s153.7-343 343-343 343 153.7 343 343-153.7 343-343 343z'/%3E%3C/svg%3E");
+		}
+		.accordion-title:nth-of-type(4)::before {
+		    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23E67E22' d='M901.9 854.5H122.1c-24.5 0-44.3-19.8-44.3-44.3V185.9c0-24.5 19.8-44.3 44.3-44.3h779.9c24.5 0 44.3 19.8 44.3 44.3v624.3c-.1 24.5-19.9 44.3-44.4 44.3zM261.2 256.3h169.6v63.6H261.2zm0 127.2h169.6v63.6H261.2zm0 127.2h169.6v63.6H261.2zm339.2 254.4H261.2v-63.6h339.2zm0-127.2H261.2v-63.6h339.2zm0-127.2H261.2v-63.6h339.2zm339.2 254.4H600.4v-63.6h339.2zm0-127.2H600.4v-63.6h339.2zm0-127.2H600.4v-63.6h339.2z'/%3E%3C/svg%3E");
+		}
+		.accordion-title:nth-of-type(5)::before {
+		    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23708090' d='M912 505L558.2 186.2c-3.8-3-9.3-2.3-12.3 1.5L457.9 306.9c-3 3.8-2.3 9.3 1.5 12.3L779.4 512 459.4 704.9c-3.8 3-4.4 8.5-1.5 12.3l88 119.3c3 3.8 8.5 4.4 12.3 1.5L912 531c14.4-11.2 14.4-33 0-46z'/%3E%3Cpath fill='%23708090' d='M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z'/%3E%3C/svg%3E");
+		}
+
+		/* 传播分享区*/
+		.share-section {
+		    max-width: 1000px;
+		    margin: 50px auto;
+		    padding: 30px 20px;
+		    text-align: center;
+		    background: #fff9f0;
+		    border-radius: 14px;
+		    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+		}
+		.share-section h3 {
+		    font-size: 24px;
+		    color: #d92c2c;
+		    margin-bottom: 12px;
+		}
+		.share-section p {
+		    font-size: 16px;
+		    color: #444;
+		    line-height: 1.8;
+		    margin-bottom: 20px;
+		}
+		.share-buttons {
+		    margin: 20px 0;
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    gap: 12px;
+		    flex-wrap: wrap;
+		}
+		.share-buttons span {
+		    font-size: 15px;
+		    color: #666;
+		}
+		.share-btn {
+		    padding: 10px 18px;
+		    border: none;
+		    border-radius: 50px;
+		    color: #fff;
+		    font-size: 15px;
+		    cursor: pointer;
+		    transition: 0.25s;
+		}
+		.share-btn.wechat { background: #07c160; }
+		.share-btn.weibo { background: #e6162d; }
+		.share-btn.xhs { background: #ff2442; }
+		.share-btn.pyq { background: #52c41a; }
+		.share-btn:hover {
+		    opacity: 0.85;
+		    transform: translateY(-2px);
+		}
+		.slogan {
+		    margin-top: 15px;
+		    font-size: 17px !important;
+		    font-weight: bold;
+		    color: #c0392b !important;
+		}
+		
+		/* 版权声明 */
+		.copyright-section {
+		    max-width: 1000px;
+		    margin: 40px auto 60px;
+		    padding: 25px 20px;
+		    text-align: center;
+		    background: #fdf6ec;
+		    border-top: 3px solid #f2b83e;
+		    border-radius: 10px;
+		    color: #555;
+		    line-height: 1.9;
+		    font-size: 15px;
+		}
+		.copyright-section h3 {
+		    font-size: 20px;
+		    color: #d92c2c;
+		    margin-bottom: 12px;
+		}
+    </style>
+</head>
+<body>
+
+<script src="./js/navbar.js"></script>
+
+<!-- 资料下载按钮 + 下载弹窗 -->
+<button class="float-download-btn" id="downloadBtn"></button>
+<div class="download-modal" id="downloadModal">
+    <h3 class="modal-title">资源下载列表</h3>
+    <ul class="download-list">
+        <li class="download-item">
+            <a href="javascript:;" data-url="resource/花灯制作工艺手册.pdf">花灯制作工艺手册.pdf</a>
+            <span class="download-tag">PDF</span>
+        </li>
+        <li class="download-item">
+            <a href="javascript:;" data-url="resource/花灯纹样素材包.zip">花灯纹样素材包.zip</a>
+            <span class="download-tag">ZIP</span>
+        </li>
+        <li class="download-item">
+            <a href="javascript:;" data-url="resource/竹篾编织教程.mp4">竹篾编织教程.mp4</a>
+            <span class="download-tag">VIDEO</span>
+        </li>
+        <li class="download-item">
+            <a href="javascript:;" data-url="resource/花灯绘画配色表.xlsx">花灯绘画配色表.xlsx</a>
+            <span class="download-tag">EXCEL</span>
+        </li>
+    </ul>
+</div>
+
+<!-- 作品详情弹窗 -->
+<div class="work-modal-mask" id="workModalMask">
+    <div class="work-modal">
+        <div class="modal-header">
+            <button class="close-btn" id="closeModalBtn">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-img-box">
+                <img src="" alt="作品大图" class="modal-work-img" id="modalWorkImg">
+            </div>
+            <div class="modal-info-comment">
+                <div class="work-detail-info">
+                    <h3 class="detail-title" id="modalWorkTitle">作品名称</h3>
+                    <p class="detail-author" id="modalWorkAuthor">创作者：佚名</p>
+                    <p class="detail-intro" id="modalWorkIntro">作品简介</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 页面内容 -->
+<div class="create-container">
+
+    <!-- 已美化的地图模块 -->
+    <div class="map-section">
+        <h3>灯火潜江 · 非遗地理指引</h3>
+        <p class="map-desc">
+            潜江花灯的传承与展示遍布全市各大文化地标。本地图汇集潜江灯会核心会场、非遗传承基地、花灯工坊与民俗体验点，方便大家实地探访花灯文化发源地，感受国家级非物质文化遗产的独特魅力。
+        </p>
+        <img src="img/e55b0454c726c4fca85ba9b874ec7fe8.png"/>
+        <div class="map-info">
+            <p><strong>潜江灯会举办地点：</strong>湖北剧院与潜江万象广场之间（华璐路与银大道交汇处）</p>
+            <p><strong>灯会时间：</strong>每年春节前至正月十五元宵节</p>
+            <p><strong>推荐游览：</strong>夜间观赏花灯效果最佳</p>
+        </div>
+    </div>
+	
+	<!-- 流光共创 - 非遗数字资源开放区 -->
+	<div class="resource-section">
+	    <h3>非遗数字资源开放区</h3>
+	    <p>点击标题展开内容，无需跳转新页面</p>
+
+	    <!-- 1. 潜江花灯历史文化资料 -->
+	    <div class="accordion-item">
+	        <div class="accordion-title" style="background: #f8b133; color: #fff; padding: 12px 16px; border-radius: 8px; cursor: pointer; font-weight: bold;">潜江花灯历史文化资料</div>
+	        <div class="accordion-content" style="padding: 16px; background: #fff9f0; border-radius: 0 0 8px 8px; color: #5a3921;">
+	            <p><strong>历史渊源：</strong>潜江花灯文脉绵延千年，最早可追溯至唐宋时期，最初为民间节庆祭祀的传统习俗，明清时期达到鼎盛。花灯技艺在江汉平原代代相传，逐渐形成独具地域特色的民间艺术行当，是荆楚地区历史文化与民俗生活的重要见证。</p>
+	            <p><strong>民俗意义：</strong>潜江花灯以祈福纳祥、驱邪避火、团圆喜庆、吉祥丰年为核心内涵，是春节与元宵节期间最重要的民俗活动。花灯不仅是民间艺术，更承载着百姓对美好生活的向往，凝聚着亲情乡愁与文化记忆，是江汉平原民俗文化的鲜活符号。</p>
+	            <p><strong>非遗认定：</strong>潜江花灯（荆楚灯会）于<strong>2021年</strong>正式入选<strong>第五批国家级非物质文化遗产代表性项目名录</strong>，成为国家重点保护与传承的非遗项目。如今在政府、传承人和社会各界的共同推动下，潜江花灯持续焕发新生，实现传统文化的活态传承与创新发展。</p>
+	        </div>
+	    </div>
+
+	    <!-- 2. 传统花灯四大制作工序 + 视频 -->
+	    <div class="accordion-item">
+	        <div class="accordion-title" style="background: #f8b133; color: #fff; padding: 12px 16px; border-radius: 8px; cursor: pointer; font-weight: bold;">传统花灯四大制作工序</div>
+	        <div class="accordion-content" style="padding: 16px; background: #fff9f0; border-radius: 0 0 8px 8px; color: #5a3921;">
+	            <p><strong>①扎骨架：</strong>选用韧性强的本地竹篾，经过劈、削、弯、撑等工序，制作花灯基础造型。骨架决定整体形态与稳固性，是花灯制作的根基。</p>
+	            <p><strong>②裱糊面：</strong>使用透光性好、色彩柔和的宣纸或丝绸，平整裱糊在骨架上，要求平整、无褶皱、无破损，保证灯光通透美观。</p>
+	            <p><strong>③绘纹样：</strong>匠人手工绘制吉祥图案，如花鸟、龙凤、鱼虫等，线条流畅、寓意喜庆，是花灯艺术价值的重要体现。</p>
+	            <p><strong>④装灯芯：</strong>安装灯源，传统用蜡烛，现代成用LED冷光灯，使光线柔和均匀，最终完成一盏完整花灯。</p>
+	            <p style="margin-top:12px;"><strong>工艺制作视频：</strong></p>
+	            <video controls width="100%" style="border-radius:8px;">
+	                <source src="./img/video/主视频二.mp4" type="video/mp4">
+	            </video>
+	        </div>
+	    </div>
+
+	    <!-- 3. 四大类型花灯 + 图片 + 寓意文字 -->
+	    <div class="accordion-item">
+	        <div class="accordion-title" style="background: #f8b133; color: #fff; padding: 12px 16px; border-radius: 8px; cursor: pointer; font-weight: bold;">四大类型花灯介绍</div>
+	        <div class="accordion-content" style="padding: 16px; background: #fff9f0; border-radius: 0 0 8px 8px; color: #5a3921;">
+	            <h4>①装饰类花灯</h4>
+	            <img src="./img/section2/1.jpeg" style="width:100%; border-radius:8px; margin:10px 0;">
+	            <p>装饰类花灯造型精巧、色彩柔和，以喜庆图案与民俗元素为特色，寓意阖家欢乐、平安顺遂，常用于营造喜庆热闹的节日氛围，传递民间对美好生活的向往。</p>
+
+	            <h4>②主题类花灯</h4>
+	            <img src="./img/section2/2.png" style="width:100%; border-radius:8px; margin:10px 0;">
+	            <p>主题类花灯以历史传说、民俗信仰与地方文化为创作核心，将文化故事融入光影造型之中，寓意传承文脉、铭记乡愁，是展现荆楚深厚文化底蕴与精神内涵的重要载体。</p>
+
+	            <h4>③娱乐性花灯</h4>
+	            <img src="./img/section2/3.jpeg" style="width:100%; border-radius:8px; margin:10px 0;">
+	            <p>娱乐性花灯多用于游艺表演，造型灵动、气氛热烈，配合民间歌舞与生动节奏，寓意驱邪迎福、喜庆丰年，彰显民间节庆的热闹气息与百姓的蓬勃活力。</p>
+
+	            <h4>④实用性花灯</h4>
+	            <img src="./img/section2/4.jpeg" style="width:100%; border-radius:8px; margin:10px 0;">
+	            <p>实用性花灯轻便易携、美观耐用，兼顾照明与装饰功能，融入喜庆祈福的传统寓意，寓意福气常伴、岁岁安康，让非遗技艺真正融入日常，点亮生活。</p>
+	        </div>
+	    </div>
+
+	    <!-- 4. 非遗宣传语与传播文案 -->
+	    <div class="accordion-item">
+	        <div class="accordion-title" style="background: #f8b133; color: #fff; padding: 12px 16px; border-radius: 8px; cursor: pointer; font-weight: bold;">非遗宣传语与传播文案</div>
+	        <div class="accordion-content" style="padding: 16px; background: #fff9f0; border-radius: 0 0 8px 8px; color: #5a3921;">
+	            <p><strong>宣传标语：</strong></p>
+	            <p>灯火潜江，薪火相传</p>
+	            <p>一盏花灯守千年，一脉非遗润民俗</p>
+	            <p>守匠心灯艺，传非遗文脉</p>
+	            <p>潜江灯流长，非遗源流远</p>
+	            <p>执手扎灯艺，心中守非遗</p>
+	            <p>流光映花灯，匠心存古艺</p>
+	            <p>执灯承灯俗，守文化根脉</p>
+	            <p>国家级非遗潜江花灯，让古老技艺走进现代</p>
+
+	            <p style="margin-top:15px;"><strong>传播文案：</strong><br>从唐宋灯火到今日夜景，荆楚花灯历经千年传承，成为国家级非遗瑰宝。一盏灯，聚匠人匠心；一缕光，载民俗乡情。愿每一次分享，都让传统文化被更多人看见、守护、传承。</p>
+	        </div>
+	    </div>
+
+	    <!-- 5. 传承人专访视频-->
+	    <div class="accordion-item">
+	        <div class="accordion-title" style="background: #f8b133; color: #fff; padding: 12px 16px; border-radius: 8px; cursor: pointer; font-weight: bold;">传承人专访视频</div>
+	        <div class="accordion-content" style="padding: 16px; background: #fff9f0; border-radius: 0 0 8px 8px; color: #5a3921;">
+	            <p>本视频记录潜江花灯非遗传承人的坚守与故事，展现匠人精神与非遗传承的真实力量。</p>
+	            <video controls width="100%" style="border-radius:8px;">
+	                <source src="./img/video/主视频3.mp4" type="video/mp4">
+	            </video>
+	        </div>
+	    </div>
+	</div>
+
+    <h2 class="module-title">流光共创 · 花灯作品墙</h2>
+    <div class="works-wall">
+        <div class="wall-header">
+            <p class="wall-subtitle">展示创作者的灵感与匠心，共赏花灯文化新生气</p>
+        </div>
+        <div class="works-grid" id="worksGrid">
+            <!-- 作品会自动渲染在这里 -->
+        </div>
+    </div>
+	 <!-- 三、传播分享区 -->
+	 <div class="share-section">
+	     <h3>传播分享 · 让花灯被更多人看见</h3>
+	     <p>一盏灯，一份情；一次分享，一次传承。让我们共同守护潜江花灯这盏国家级非遗之灯。</p>
+	     <div class="share-buttons">
+	         <span>分享至：</span>
+	         <button class="share-btn wechat">微信</button>
+	         <button class="share-btn weibo">微博</button>
+	         <button class="share-btn xhs">小红书</button>
+	         <button class="share-btn pyq">朋友圈</button>
+	     </div>
+	     <p class="slogan">执手传灯韵，非遗源流远</p>
+	 </div>
+	 
+	 <!-- 四、版权声明-->
+	 <div class="copyright-section">
+	     <h3>版权与使用说明</h3>
+	     <p>本平台所有资源仅用于学习、交流、非遗传播，禁止商业使用。</p>
+	     <p>使用时请注明来源：潜江花灯国家级非物质文化遗产数字平台</p>
+	     <p>尊重匠人匠心，保护民俗根脉，让传统文化在新时代生生不息。</p>
+	 </div>
+</div>
+
+<script>
+	// 折叠面板
+	document.querySelectorAll('.accordion-title').forEach(item => {
+	    item.addEventListener('click', function() {
+	        const content = this.nextElementSibling;
+	        content.style.display = content.style.display === 'block' ? 'none' : 'block';
+	    });
+	});
+
+    // ==============================================
+    // 🔥 核心：本地存储互通，读取发布页面的作品
+    // ==============================================
+    const STORAGE_KEY = "lantern_works_list";
+
+    // 默认演示作品
+    const demoWorks = [
+        { work_id: "1", workname: "福树闹元宵", username: "local_user", nickname: "花灯匠人", workIntroduction: "以巨型发光许愿树为造型，融合非遗花灯扎制技艺，用暖光与彩球营造节日氛围，传递非遗保护全民参与的理念，展现传统花灯的现代创意表达。", workPhoto: "./img/section5/福树映流光.png" },
+        { work_id: "2", workname: "哪吒守正灯", username: "local_user", nickname: "非遗传承者", workIntroduction: "以国漫 IP 哪吒为原型，搭配 “火眼辨伪、莲心守正” 主题楹联，将传统花灯工艺与当代文化符号结合，打造兼具趣味性与正能量的非遗创意灯组。", workPhoto: "./img/section5/哪吒守正灯.png" },
+        { work_id: "3", workname: "虾稻庆丰年", username: "local_user", nickname: "花灯匠人", workIntroduction: "立足潜江 “虾稻发源地” 地域特色，以卡通虾稻 IP 为核心，融入荷花、龙灯等元素，彰显地方农业文化与非遗花灯的融合，凸显潜江地域文化标识。", workPhoto: "./img/section5/虾稻丰年灯.png" },  
+  ];
+
+    window.onload = function () {
+        loadAllWorks();
+    };
+
+    // 读取本地所有作品（发布页 + 默认作品）
+    function loadAllWorks() {
+        let localWorks = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        let finalWorks = [...localWorks, ...demoWorks];
+        renderWorks(finalWorks);
+    }
+
+    // 渲染作品墙
+    function renderWorks(list) {
+        const grid = document.getElementById('worksGrid');
+        grid.innerHTML = '';
+
+        list.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'work-card';
+            card.innerHTML = `
+                <div class="work-img-box">
+                    <img src="${item.workPhoto}" alt="${item.workname}" class="work-img">
+                </div>
+                <div class="work-info">
+                    <h4 class="work-name">${item.workname}</h4>
+                    <p class="work-author">
+                        <span>创作者：${item.nickname || item.username}</span>
+                    </p>
+                </div>
+            `;
+            card.onclick = () => openModal(item);
+            grid.appendChild(card);
+        });
+    }
+
+    // 弹窗
+    function openModal(item) {
+        document.getElementById('modalWorkImg').src = item.workPhoto;
+        document.getElementById('modalWorkTitle').textContent = item.workname;
+        document.getElementById('modalWorkAuthor').textContent = `创作者：${item.nickname || item.username}`;
+        document.getElementById('modalWorkIntro').textContent = item.workIntroduction || '暂无简介';
+        document.getElementById('workModalMask').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('workModalMask').classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    document.getElementById('closeModalBtn').onclick = closeModal;
+    document.getElementById('workModalMask').onclick = (e) => {
+        if (e.target === document.getElementById('workModalMask')) closeModal();
+    };
+
+    // 下载弹窗
+    const downloadBtn = document.getElementById('downloadBtn');
+    const downloadModal = document.getElementById('downloadModal');
+    downloadBtn.addEventListener('click', () => {
+        downloadModal.classList.toggle('active');
+    });
+    document.addEventListener('click', (e) => {
+        if (!downloadBtn.contains(e.target) && !downloadModal.contains(e.target)) {
+            downloadModal.classList.remove('active');
+        }
+    });
+
+    document.querySelectorAll('.download-item a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = link.getAttribute('data-url');
+            alert('开始下载：' + url);
+        });
+    });
+</script>
+</body>
+</html>

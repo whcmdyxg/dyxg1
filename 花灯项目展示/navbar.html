@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* 重置iframe内的样式，确保独立 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent; /* 透明背景，适配主页面 */
+        }
+
+        .navbar {
+            width: 100%;
+            height: 80px;
+            background-color: rgba(15, 13, 11, 0.95);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 20px rgba(250, 214, 137, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .navbar-container {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fad689;
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(250, 214, 137, 0.5);
+            transition: color 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            color: #ffd966;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2px;
+        }
+
+        .nav-item {
+            position: relative;
+            list-style: none;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 24px;
+            font-size: 16px;
+            color: #d4c0a1;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, #fad689, #f7b733);
+            color: #0f0d0b;
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #fad689, #f7b733);
+            color: #0f0d0b;
+            box-shadow: 0 4px 8px rgba(250, 214, 137, 0.3);
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background-color: #0f0d0b;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 80%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background-color: #fad689;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .user-right-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+        }
+
+        .auth-btn {
+            padding: 8px 18px;
+            border-radius: 4px;
+            border: 1px solid #fad689;
+            background: transparent;
+            color: #fad689;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .auth-btn:hover {
+            background: linear-gradient(135deg, #fad689, #f7b733);
+            color: #0f0d0b;
+            border-color: #f7b733;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fad689;
+            display: none;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fad689;
+        }
+
+        .user-name {
+            font-size: 15px;
+            max-width: 100px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .logout-btn {
+            padding: 6px 14px;
+            font-size: 13px;
+            border-color: #dc3545;
+            color: #dc3545;
+            background: transparent;
+        }
+
+        .logout-btn:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .login-panel {
+            position: fixed;
+            top: 90px;
+            right: 5%;
+            width: 300px;
+            padding: 20px;
+            background: rgba(15,13,11,0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(250,214,137,0.3);
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+            z-index: 10000;
+        }
+
+        .login-panel.show {
+            display: flex !important;
+        }
+
+        .panel-title {
+            color: #fad689;
+            font-size: 16px;
+            font-weight: 50;
+            margin-bottom: 4px;
+        }
+
+        .auth-input {
+            width: 100%;
+            height: 38px;
+            padding: 0 12px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(250,214,137,0.4);
+            border-radius: 4px;
+            color: #fff;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .auth-input:focus {
+            border-color: #fad689;
+            box-shadow: 0 0 6px rgba(250,214,137,0.4);
+        }
+
+        .panel-submit {
+            height: 38px;
+            border-radius: 4px;
+            border: none;
+            background: linear-gradient(135deg, #fad689, #f7b733);
+            color: #0f0d0b;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .panel-submit:hover {
+            transform: translateY(-1px);
+        }
+
+        .panel-switch {
+            text-align: center;
+            color: #d4c0a1;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .panel-switch span {
+            color: #fad689;
+        }
+
+        .error-tip {
+            color: #dc3545;
+            font-size: 12px;
+            height: 14px;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: rgba(15, 13, 11, 0.98);
+                backdrop-filter: blur(8px);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                gap: 15px;
+                transform: translateY(-120%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.5s ease;
+                z-index: 9999;
+            }
+
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(6px, 6px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(6px, -6px);
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .login-panel {
+                width: 280px;
+                right: 20px;
+                top: 85px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand" id="pageTitle">灯影流光</a>
+
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="section1.html" class="nav-link" data-page="section1" data-title="灯影寻根">灯影寻根</a></li>
+                <li class="nav-item"><a href="section2.html" class="nav-link" data-page="section2" data-title="花灯解码">花灯解码</a></li>
+                <li class="nav-item"><a href="section3.html" class="nav-link" data-page="section3" data-title="灯火匠心">灯火匠心</a></li>
+                <li class="nav-item"><a href="section4.html" class="nav-link" data-page="section4" data-title="数字传承">数字传承</a></li>
+                <li class="nav-item"><a href="section5.html" class="nav-link" data-page="section5" data-title="文化活动">文化活动</a></li>
+            </ul>
+
+            <div class="user-right-group">
+                <button class="auth-btn" id="loginShowBtn">登录</button>
+                <button class="auth-btn" id="regShowBtn">注册</button>
+
+                <div class="user-info" id="userInfo">
+                    <img src="default-avatar.png" class="user-avatar" id="avatar">
+                    <span class="user-name" id="uname">用户名</span>
+                    <button class="auth-btn logout-btn" id="logoutBtn">退出</button>
+                </div>
+
+                <div class="login-panel" id="loginPanel">
+                    <div class="panel-title">账号登录</div>
+                    <input type="text" class="auth-input" id="loginUser" placeholder="请输入用户名/手机号">
+                    <input type="password" class="auth-input" id="loginPwd" placeholder="请输入密码">
+                    <div class="error-tip" id="loginErr"></div>
+                    <button class="panel-submit" id="loginSubmit">登录</button>
+                    <div class="panel-switch">没有账号？<span id="toReg">立即注册</span></div>
+                </div>
+
+                <div class="login-panel" id="regPanel">
+                    <div class="panel-title">账号注册</div>
+                    <input type="text" class="auth-input" id="regUser" placeholder="请设置用户名">
+                    <input type="tel" class="auth-input" id="regPhone" placeholder="请输入手机号">
+                    <input type="password" class="auth-input" id="regPwd" placeholder="请输入密码（≥6位）">
+                    <input type="password" class="auth-input" id="regPwd2" placeholder="确认密码">
+                    <div class="error-tip" id="regErr"></div>
+                    <button class="panel-submit" id="regSubmit">注册</button>
+                    <div class="panel-switch">已有账号？<span id="toLogin">立即登录</span></div>
+                </div>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pageTitle = document.getElementById('pageTitle');
+
+        // ==============================================
+        // 稳定版：从父页面获取真实URL，100%生效
+        // ==============================================
+        function syncTitle() {
+            try {
+                var realURL = window.parent.location.href;
+            } catch (e) {
+                var realURL = window.location.href;
+            }
+			// console.log("-----------")
+            navLinks.forEach(link => {
+                let page = link.getAttribute("data-page");
+                let title = link.getAttribute("data-title");
+                link.classList.remove("active");
+
+                if (realURL.includes(page)) {
+                    link.classList.add("active");
+                    pageTitle.textContent = title;
+                }
+            });
+        }
+
+        // 加载时执行
+        window.addEventListener('load', syncTitle);
+
+        // 点击菜单立即更新（最稳）
+        navLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                let t = this.getAttribute("data-title");
+                pageTitle.textContent = t;
+
+                navLinks.forEach(l => l.classList.remove("active"));
+                this.classList.add("active");
+
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // 以下是你原有功能，不动
+        const loginPanel = document.getElementById('loginPanel');
+        const regPanel = document.getElementById('regPanel');
+        const loginShowBtn = document.getElementById('loginShowBtn');
+        const regShowBtn = document.getElementById('regShowBtn');
+        const toReg = document.getElementById('toReg');
+        const toLogin = document.getElementById('toLogin');
+        const loginSubmit = document.getElementById('loginSubmit');
+        const regSubmit = document.getElementById('regSubmit');
+        const loginErr = document.getElementById('loginErr');
+        const regErr = document.getElementById('regErr');
+        const userInfo = document.getElementById('userInfo');
+        const uname = document.getElementById('uname');
+        const avatar = document.getElementById('avatar');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            closeAllPanel();
+        });
+
+        function closeAllPanel() {
+            loginPanel.classList.remove('show');
+            regPanel.classList.remove('show');
+        }
+
+        loginShowBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllPanel();
+            loginPanel.classList.add('show');
+        });
+
+        regShowBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeAllPanel();
+            regPanel.classList.add('show');
+        });
+
+        toReg.addEventListener('click', () => {
+            loginPanel.classList.remove('show');
+            regPanel.classList.add('show');
+        });
+
+        toLogin.addEventListener('click', () => {
+            regPanel.classList.remove('show');
+            loginPanel.classList.add('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.user-right-group') && !e.target.closest('.login-panel')) {
+                closeAllPanel();
+            }
+        });
+
+        loginPanel.addEventListener('click', (e) => e.stopPropagation());
+        regPanel.addEventListener('click', (e) => e.stopPropagation());
+
+        function isLogin() {
+            return !!localStorage.getItem('userInfo');
+        }
+
+        window.loginInterceptor = function (callback) {
+            if (isLogin()) {
+                callback();
+                return true;
+            }
+            closeAllPanel();
+            loginPanel.classList.add('show');
+            window._afterLogin = callback;
+            return false;
+        };
+
+        function showErr(el, txt) {
+            el.textContent = txt;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 2500);
+        }
+
+        loginSubmit.addEventListener('click', async () => {
+            const user = document.getElementById('loginUser').value.trim();
+            const pwd = document.getElementById('loginPwd').value.trim();
+            if (!user) return showErr(loginErr, '请输入账号');
+            if (!pwd) return showErr(loginErr, '请输入密码');
+
+            try {
+                const res = await fetch('/api/user/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pwd })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || '登录失败');
+
+                localStorage.setItem('userToken', data.token);
+                localStorage.setItem('userInfo', JSON.stringify(data.user));
+                closeAllPanel();
+                updateUserUI(data.user);
+
+                if (window._afterLogin) {
+                    window._afterLogin();
+                    window._afterLogin = null;
+                }
+                alert('登录成功');
+            } catch (e) {
+                showErr(loginErr, e.message);
+            }
+        });
+
+        regSubmit.addEventListener('click', async () => {
+            const user = document.getElementById('regUser').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const pwd = document.getElementById('regPwd').value.trim();
+            const pwd2 = document.getElementById('regPwd2').value.trim();
+
+            if (!user) return showErr(regErr, '请输入用户名');
+            if (!/^1[3-9]\d{9}$/.test(phone)) return showErr(regErr, '手机号格式错误');
+            if (pwd.length < 6) return showErr(regErr, '密码≥6位');
+            if (pwd !== pwd2) return showErr(regErr, '两次密码不一致');
+
+            try {
+                const res = await fetch('/api/user/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, phone, password: pwd })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.message || '注册失败');
+                showErr(regErr, '注册成功，请登录');
+                setTimeout(() => {
+                    regPanel.classList.remove('show');
+                    loginPanel.classList.add('show');
+                }, 1500);
+            } catch (e) {
+                showErr(regErr, e.message);
+            }
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            if (!confirm('确定退出？')) return;
+            await fetch('/api/user/logout', { method: 'POST', credentials: 'include' });
+            localStorage.clear();
+            updateUserUI(null);
+        });
+
+        function updateUserUI(user) {
+            if (user) {
+                loginShowBtn.style.display = 'none';
+                regShowBtn.style.display = 'none';
+                userInfo.style.display = 'flex';
+                uname.textContent = user.username;
+                if (user.avatar) avatar.src = user.avatar;
+            } else {
+                loginShowBtn.style.display = 'inline-block';
+                regShowBtn.style.display = 'inline-block';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        (async () => {
+            const local = localStorage.getItem('userInfo');
+            if (local) updateUserUI(JSON.parse(local));
+        })();
+    </script>
+</body>
+</html>

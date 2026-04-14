@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>匠心互动</title>
+    <link rel="stylesheet" href="./css/section1.css">
+    <link rel="stylesheet" href="./css/secton3.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        .loading-tip {
+            text-align: center;
+            margin: 10px 0;
+            color: #fad689;
+            display: none;
+        }
+        .error-tip {
+            text-align: center;
+            color: #dc3545;
+            font-size: 12px;
+            margin: 10px 0;
+            display: none;
+        }
+        .works-loading {
+            text-align: center;
+            padding: 40px 0;
+            color: #fad689;
+            display: none;
+        }
+        .works-empty {
+            text-align: center;
+            padding: 40px 0;
+            color: #d4c0a1;
+            font-size: 14px;
+            display: none;
+        }
+        .comment-loading {
+            font-size: 12px;
+            color: #fad689;
+            text-align: center;
+            padding: 5px 0;
+            display: none;
+        }
+        .comment-time {
+            font-size: 10px;
+            color: #999;
+            margin-left: 8px;
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            opacity: 0;
+            font-size: 100px;
+            cursor: pointer;
+        }
+
+        .quiz-video-row {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+        .video-box {
+            flex: 0 0 420px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+        }
+        .quiz-box-wrapper {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .quiz-container {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: #fff;
+            padding: 20px;
+            margin: 10px 0;
+        }
+        .quiz-video-row h3 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 0;
+            color: #8B4513;
+            font-size: 20px;
+        }
+        .video-content {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .quiz-video-row {
+                flex-direction: column;
+            }
+            .video-box {
+                flex: none;
+                width: 100%;
+            }
+            .quiz-container {
+                width: 100%;
+            }
+        }
+
+        #quizBox {
+            background-color: #F9F2D6;
+            border: 1px solid #E8DFB5;
+            border-radius: 12px;
+            padding: 25px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin: 10px 0;
+        }
+        #quizBox > div:first-child {
+            font-size: 18px;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 20px !important;
+            line-height: 1.6;
+        }
+        #quizBox button {
+            background-color: #F7D154 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 12px 15px !important;
+            margin: 8px 0 !important;
+            font-size: 16px !important;
+            color: #333 !important;
+            font-weight: 500 !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        #quizBox button:hover {
+            background-color: #F0C846 !important;
+        }
+        #quizResult {
+            margin-top: 15px !important;
+            color: #8B4513 !important;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #FFF9E8;
+            text-align: center;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+    </style>
+</head>
+<body>
+    <script src="./js/navbar.js"></script>
+
+    <div class="page-title">
+        <h1>灯火匠心</h1>
+        <p>分享你的DIY花灯作品，与同好交流创作心得</p>
+    </div>
+
+    <div class="interactive-container">
+
+        <div class="quiz-video-row">
+            <div class="video-box">
+                <video class="video-content" controls>
+                    <source src="./img/video/制作视频.mp4" type="video/mp4">
+                    你的浏览器不支持视频播放
+                </video>
+            </div>
+
+            <div class="quiz-box-wrapper">
+                <div class="quiz-container">
+                    <h3>潜江花灯知识问答</h3>
+                    <div id="quizBox"></div>
+                    <div id="quizResult"></div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="module-title">作品上传</h2>
+        <div class="upload-section">
+            <form class="upload-form" id="uploadForm" enctype="multipart/form-data">
+                <div class="loading-tip" id="loadingTip">正在上传作品，请稍候...</div>
+                <div class="error-tip" id="errorTip"></div>
+
+                <div class="form-group">
+                    <label for="workTitle">作品名称</label>
+                    <input type="text" id="workTitle" placeholder="请输入你的花灯作品名称">
+                </div>
+                <div class="form-group">
+                    <label for="workDesc">创作心得</label>
+                    <textarea id="workDesc" rows="3" placeholder="分享你的制作思路和心得吧~"></textarea>
+                </div>
+                <div class="upload-area">
+                    <div class="file-input-wrapper">
+                        <button type="button" class="upload-btn">选择作品图片</button>
+                        <input type="file" id="fileUpload" accept="image/jpeg,image/png,image/jpg">
+                    </div>
+                    <div class="preview-box">
+                        <img src="" alt="作品预览" class="preview-img" id="previewImg" style="display: none;">
+                        <span style="color: #e0d8c8; font-size: 12px;">未上传图片</span>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn" id="submitBtn">发布作品</button>
+            </form>
+        </div>
+
+        <h2 class="module-title">作品展示</h2>
+        <div class="works-section">
+            <div class="works-loading" id="worksLoading">正在加载作品列表，请稍候...</div>
+            <div class="works-empty" id="worksEmpty">暂无作品，快来发布你的第一个花灯作品吧！</div>
+            <div class="works-grid" id="worksGrid"></div>
+        </div>
+    </div>
+
+    <script>
+		const questions = [
+		  {q:"潜江花灯是哪一年入选国家级非物质文化遗产？",o:["2021年","2020年","2019年"],a:0},
+		  {q:"潜江花灯属于哪类非遗？",o:["国家级","省级","市级"],a:0},
+		  {q:"以下哪项是花灯制作第一步？",o:["绘画","扎骨架","裱糊"],a:1},
+		  {q:"潜江花灯主要流传于？",o:["江汉平原","成都平原","珠江三角洲"],a:0},
+		  {q:"花灯的核心文化内涵是？",o:["祈福纳祥","商业宣传","娱乐观赏"],a:0},
+		  {q:"本作品《灯影流光》的核心立意是？",o:["数字化保护、年轻化传播、活态化传承","只做视频","只做网页"],a:0}
+		];
+		let qIndex = 0;
+		let score = 0;
+		function renderQuiz() {
+		  const box = document.getElementById("quizBox");
+		  box.innerHTML = "";
+		  if (qIndex >= questions.length) {
+		    document.getElementById("quizResult").innerText = `🎉 恭喜你完成答题！得分：${score}/${questions.length} 你已是花灯小专家！`;
+		    return;
+		  }
+		  const q = questions[qIndex];
+		  const t = document.createElement("div");
+		  t.innerText = q.q;
+		  box.appendChild(t);
+		  q.o.forEach((opt,i)=>{
+		    const btn = document.createElement("button");
+		    btn.innerText = opt;
+		    btn.className = "quiz-option-btn";
+		    btn.onclick = ()=>{
+		      if (i === q.a) score++;
+		      qIndex++;
+		      renderQuiz();
+		    };
+		    box.appendChild(btn);
+		  });
+		}
+		renderQuiz();
+
+        const STORAGE_KEY = "lantern_works_list";
+        window.addEventListener('load', () => {
+            const fileUpload = document.getElementById('fileUpload');
+            const previewImg = document.getElementById('previewImg');
+            const previewText = previewImg.nextElementSibling;
+            const uploadForm = document.getElementById('uploadForm');
+            const worksGrid = document.getElementById('worksGrid');
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingTip = document.getElementById('loadingTip');
+            const errorTip = document.getElementById('errorTip');
+            const worksLoading = document.getElementById('worksLoading');
+            const worksEmpty = document.getElementById('worksEmpty');
+            
+            let selectedFile = null;
+            const mockUser = { username: 'local_user', nickname: '花灯爱好者' };
+
+            window.sessionStorageUtil = { getUserInfo: () => mockUser };
+
+            // 从本地存储读取所有作品
+            function getLocalWorks() {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+            }
+
+            // 保存到本地存储
+            function saveLocalWorks(works) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(works));
+            }
+
+            // 加载作品
+            async function loadWorksList() {
+                worksLoading.style.display = 'block';
+                await new Promise(r => setTimeout(r, 600));
+                worksLoading.style.display = 'none';
+
+                let localWorks = getLocalWorks();
+                renderWorksList(localWorks);
+            }
+
+            // 渲染作品
+            function renderWorksList(works) {
+                worksGrid.innerHTML = '';
+                works.forEach(work => {
+                    const card = document.createElement('div');
+                    card.className = 'work-card';
+                    card.innerHTML = `
+                        <img src="${work.workPhoto}" class="work-img">
+                        <div class="work-info">
+                            <h3 class="work-title">${work.workname}</h3>
+                            <p class="work-desc">${work.workIntroduction}</p>
+                            <p style="font-size:12px;color:#999;">作者：${work.nickname}</p>
+                        </div>
+                    `;
+                    worksGrid.appendChild(card);
+                });
+            }
+
+            // 图片预览
+            fileUpload.addEventListener('change', (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                selectedFile = file;
+                const reader = new FileReader();
+                reader.onload = e => {
+                    previewImg.src = e.target.result;
+                    previewImg.style.display = 'block';
+                    previewText.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // 发布作品（保存到本地，自动同步到作品墙）
+            uploadForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('workTitle').value.trim();
+                const desc = document.getElementById('workDesc').value.trim();
+                if (!title || !desc || !selectedFile) { alert('请完善信息'); return; }
+
+                submitBtn.disabled = true;
+                loadingTip.style.display = 'block';
+                await new Promise(r => setTimeout(r, 1200));
+
+                const newWork = {
+                    work_id: Date.now() + '',
+                    workname: title,
+                    workIntroduction: desc,
+                    workPhoto: previewImg.src,
+                    username: mockUser.username,
+                    nickname: mockUser.nickname
+                };
+
+                const list = getLocalWorks();
+                list.unshift(newWork);
+                saveLocalWorks(list);
+
+                uploadForm.reset();
+                previewImg.style.display = 'none';
+                previewText.style.display = 'block';
+                selectedFile = null;
+                alert('发布成功！已同步到作品墙');
+                loadWorksList();
+                submitBtn.disabled = false;
+                loadingTip.style.display = 'none';
+            });
+
+            loadWorksList();
+        });
+    </script>
+</body>
+</html>

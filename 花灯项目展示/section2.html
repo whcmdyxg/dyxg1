@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>花灯解码</title>
+    <link rel="stylesheet" href="./css/section1.css">
+    <link rel="stylesheet" href="./css/section2.css">
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+        /* 全局页面样式 */
+        .page-title {
+            text-align: center;
+            margin: 30px 0;
+            color: #333;
+        }
+        .module-title {
+            text-align: center;
+            margin: 40px 0 20px;
+            font-size: 24px;
+            color: #b22626;
+        }
+        .history-trace, .folk-story {
+            max-width: 1100px;
+            margin: 0 auto;
+            line-height: 1.8;
+            font-size: 16px;
+            color: #444;
+            padding: 0 20px;
+        }
+        .story-imgs {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .story-img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        /* 视频样式（和原来图片一样大小） */
+        .story-video {
+            max-width: 100%;
+            border-radius: 10px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* ======================
+           品类卡片：底部向上滑出文字（你要的效果）
+        ======================= */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .category-card {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            height: 280px;
+        }
+        .category-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 底部向上滑出的文字框 */
+        .category-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(250, 214, 137, 0.95);
+            color: #0f0d0b;
+            padding: 22px 14px;
+            min-height: 240px;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            transform: translateY(100%);
+            transition: transform 0.35s ease;
+        }
+        .category-card:hover .category-text {
+            transform: translateY(0);
+        }
+
+        /* 下方标题不动 */
+        .category-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            padding: 10px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 900px) {
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 500px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ========== 顶部导航栏 ========== -->
+    <script src="./js/navbar.js"></script>
+    
+    <!-- ========== 页面标题 ========== -->
+    <div class="page-title">
+        <h1>花灯解码-一盏灯的诞生</h1>
+        <p>潜江花灯的风格、品类、技艺与民俗传承</p>
+    </div>
+
+    <!-- ========== 四大模块容器 ========== -->
+    <div class="decode-container">
+        <!-- 1. 历史溯源模块 -->
+        <h2 class="module-title">历史溯源 · 风格差异</h2>
+        <div class="history-trace">
+            <div class="trace-content">
+                <p>潜江花灯历史源远流长，其脉络可追溯至唐代，唐《酉阳杂俎》《荆州府志》中便有江汉地区上元张灯的记载，明清时期逐渐形成规模，民间自发形成上灯、赏灯、游灯的完整习俗，清末以来更是成为潜江元宵期间最隆重的民俗活动，至今已有百余年明确的工艺传承史。作为国家级非遗“潜江灯会”的核心载体，它从最初的祭祀祈福道具，逐步发展为兼具民俗、工艺与审美价值的综合艺术形式，1978年潜江灯会恢复后，在传承人的推动下走向规范化、规模化发展，更走出国门，亮相国际舞台。</p>
+                <p>潜江花灯的风格差异，既源于时代迭代，也扎根地域特色，呈现出鲜明的分层特质。传统风格以民俗实用为核心，造型质朴灵动，题材多取自民间故事、成语典故与水乡风物，如《鹬蚌相争灯》《麒麟送子》及荷花、鲤鱼等造型，工艺上坚守竹篾骨架、榫卯结构、彩绘剪纸等传统技法，凸显楚地民俗遗风与江汉水乡的质朴底蕴，草把龙、烛龙、黑驴子灯等更是这一风格的典型代表，承载着驱瘟祈福的民俗内涵。现代风格则在传统基础上大胆创新，传承人们融入LED光源、声光电特效甚至3D打印技术，题材拓展至潜江龙虾、虾稻连作、章华台楚文化等地域IP，造型更宏大、色彩更饱满。</p>
+            </div>
+        </div>
+
+        <!-- 2. 品类图鉴模块（你要的：底部向上滑出文本框） -->
+        <h2 class="module-title">品类图鉴 · 四大花灯类型</h2>
+        <div class="category-grid">
+            <div class="category-card">
+                <img src="./img/section2/1.jpeg" class="category-img">
+                <div class="category-text">
+核心功能为美化环境、烘托节庆氛围，以地方风物、吉祥符号为创作原型，造型精巧、光影通透，将民俗审美与装饰功能结合，传递地域文化与烟火气息。                </div>
+                <div class="category-title">装饰类花灯</div>
+            </div>
+
+            <div class="category-card">
+                <img src="./img/section2/2.png" class="category-img">
+                <div class="category-text">
+以叙事为核心，依托神话、典故等展开创作，通过造型、色彩传递传统价值观与民俗寓意，兼具文化承载与视觉美感，让观众在观赏中感受文化内涵。                </div>
+                <div class="category-title">主题性花灯</div>
+            </div>
+
+            <div class="category-card">
+                <img src="./img/section2/3.jpeg" class="category-img">
+                <div class="category-text">
+互动性强、充满活力，多以龙灯、狮灯等形式呈现，配合民俗表演展示，承载民众祈福、欢庆的愿望，是连接乡土情感的重要载体。                </div>
+                <div class="category-title">娱乐性花灯</div>
+            </div>
+
+            <div class="category-card">
+                <img src="./img/section2/4.jpeg" class="category-img">
+                <div class="category-text">
+兼顾审美与实用功能，造型轻巧、适配多种场景，融入吉祥寓意，打破非遗与生活的边界，让灯艺走进日常，传递手工温度与民俗文化。                </div>
+                <div class="category-title">实用性花灯</div>
+            </div>
+        </div>
+
+        <!-- 3. 技艺解析模块 -->
+        <h2 class="module-title">技艺解析 · 制作流程</h2>
+        <div class="skill-video">
+            <div class="video-wrapper">
+                <video class="skill-video-content" controls>
+                    <source src="./img/video/主视频二.mp4" type="video/mp4">
+                    你的浏览器不支持HTML5视频播放
+                </video>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
