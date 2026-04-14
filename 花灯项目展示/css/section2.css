@@ -1,0 +1,197 @@
+/* ========== 花灯解码页面专属样式 ========== */
+.decode-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+}
+
+/* 通用模块标题 */
+.module-title {
+    text-align: center;
+    margin: 40px 0 30px;
+    font-size: 32px;
+    color: #fad689;
+    letter-spacing: 2px;
+    position: relative;
+}
+
+.module-title::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #fad689, #f7b733);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* 1. 历史溯源模块 */
+.history-trace {
+    background-color: rgba(45, 37, 31, 0.5);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 50px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.trace-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    line-height: 1.8;
+    color: #e0d8c8;
+}
+
+.trace-content p {
+    margin: 0;
+    text-indent: 2em;
+}
+
+/* 2. 品类图鉴模块 - 强制一行4列布局 */
+.category-grid {
+    display: flex; /* 替换grid为flex，强制一行 */
+    justify-content: space-between; /* 均匀分布，保持一行 */
+    gap: 15px; /* 卡片间距，可根据需要调整 */
+    margin-bottom: 50px;
+    overflow-x: auto; /* 小屏时允许横向滚动，不换行 */
+    padding-bottom: 10px; /* 滚动条预留空间 */
+}
+
+/* 去掉滚动条样式（可选，美化） */
+.category-grid::-webkit-scrollbar {
+    height: 6px;
+}
+.category-grid::-webkit-scrollbar-thumb {
+    background-color: rgba(250, 214, 137, 0.3);
+    border-radius: 3px;
+}
+
+.category-card {
+    flex: 0 0 calc(25% - 11px); /* 强制4列，减去gap的均分 */
+    background-color: rgba(45, 37, 31, 0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+.category-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.category-desc {
+    padding: 15px;
+    text-align: center;
+}
+
+.category-desc h3 {
+    color: #fad689;
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+
+.category-desc p {
+    color: #e0d8c8;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* 3. 技艺解析模块 - 视频嵌入 */
+.skill-video {
+    background-color: rgba(45, 37, 31, 0.5);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 50px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 比例 */
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #1a1613;
+}
+
+.skill-video-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* 4. 民俗故事模块 - 双图+文字 */
+.folk-story {
+    background-color: rgba(45, 37, 31, 0.5);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.story-imgs {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.story-img {
+    flex: 1;
+    min-width: 280px;
+    height: 500px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.story-text {
+    color: #e0d8c8;
+    line-height: 1.8;
+}
+
+.story-text h4 {
+    color: #fad689;
+    margin: 0 0 15px;
+    font-size: 18px;
+}
+
+/* 移动端适配（小屏横向滚动，保持一行） */
+@media (max-width: 768px) {
+    .module-title {
+        font-size: 26px;
+    }
+
+    .history-trace, .folk-story {
+        padding: 20px;
+    }
+
+    /* 移动端仍保持一行，允许横向滚动 */
+    .category-grid {
+        gap: 10px;
+    }
+    .category-card {
+        flex: 0 0 calc(80% - 8px); /* 移动端单张占80%宽度，滚动查看 */
+    }
+    .category-img {
+        height: 180px;
+    }
+
+    .story-imgs {
+        flex-direction: column;
+    }
+
+    .story-img {
+        min-width: 100%;
+        height: 400px;
+    }
+}

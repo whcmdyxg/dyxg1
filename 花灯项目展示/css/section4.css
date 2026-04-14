@@ -1,0 +1,276 @@
+/* ========== 薪火永续页面专属样式 ========== */
+.inherit-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+    margin-top: 20px;
+}
+
+/* 通用模块标题 */
+.module-title {
+    text-align: center;
+    margin: 40px 0 50px;
+    font-size: 32px;
+    color: #fad689;
+    letter-spacing: 2px;
+    position: relative;
+}
+
+.module-title::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #fad689, #f7b733);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* 核心：传承人列表布局（替代原时间轴） */
+.inheritor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* 传承人卡片间距 */
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* 单个传承人卡片 */
+.inheritor-item {
+    display: flex;
+    gap: 20px;
+    background-color: rgba(45, 37, 31, 0.8);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    align-items: center;
+}
+
+/* 左侧：名称 + 图片（固定宽度） */
+.inheritor-left {
+    flex: 0 0 200px; /* 固定宽度，不缩放 */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    text-align: center;
+}
+
+/* 左侧名称区域 */
+.name-wrapper {
+    width: 100%;
+}
+
+/* 左侧头像区域 */
+.avatar-wrapper {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #fad689;
+    box-shadow: 0 0 15px rgba(250, 214, 137, 0.5);
+}
+
+.timeline-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 右侧：介绍 + 视频（自适应宽度） */
+.inheritor-right {
+    flex: 1; /* 占满剩余宽度 */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* 卡片内容样式 */
+.card-title {
+    color: #fad689;
+    font-size: 20px;
+    margin: 0 0 5px;
+}
+
+.card-era {
+    color: #f7b733;
+    font-size: 14px;
+    margin: 0;
+    font-style: italic;
+}
+
+.card-desc {
+    color: #e0d8c8;
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* 视频嵌入样式 */
+.card-video {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 比例 */
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #1a1613;
+}
+
+.video-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* 主题升华文案样式 */
+.inherit-thought {
+    background-color: rgba(45, 37, 31, 0.8);
+    border-radius: 12px;
+    padding: 30px;
+    margin: 80px auto 0;
+    max-width: 900px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.thought-title {
+    color: #fad689;
+    font-size: 24px;
+    margin: 0 0 20px;
+    text-align: center;
+}
+
+.thought-content {
+    color: #e0d8c8;
+    line-height: 1.9;
+    font-size: 15px;
+}
+
+.thought-content p {
+    margin: 0 0 15px;
+    text-indent: 2em;
+}
+
+.thought-content strong {
+    color: #f7b733;
+}
+
+/* 移动端适配（768px以下） */
+@media (max-width: 768px) {
+    .module-title {
+        font-size: 26px;
+    }
+
+    /* 移动端传承人卡片改为上下布局 */
+    .inheritor-item {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    /* 左侧占满宽度 */
+    .inheritor-left {
+        flex: none;
+        width: 100%;
+    }
+
+    .avatar-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+
+    .inherit-thought {
+        padding: 20px;
+        margin-top: 50px;
+    }
+
+    .thought-title {
+        font-size: 20px;
+    }
+}
+
+/* ========== 新增：传承人采访视频模块样式 ========== */
+.inheritor-interview {
+    max-width: 900px;
+    margin: 60px auto 40px;
+    background-color: rgba(45, 37, 31, 0.8);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.interview-video-wrapper {
+    width: 100%;
+    position: relative;
+}
+
+.interview-video-content {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    outline: none;
+    border: 2px solid #fad689;
+}
+
+.video-desc {
+    text-align: center;
+    color: #e0d8c8;
+    font-size: 14px;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+
+/* 移动端适配采访视频 */
+@media (max-width: 768px) {
+    .inheritor-interview {
+        padding: 15px;
+        margin: 40px auto 30px;
+    }
+    .video-desc {
+        font-size: 13px;
+        padding: 0 10px;
+    }
+}
+
+/* 薪火相传板块样式 */
+.inherit-thought {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+.thought-title {
+    text-align: center;
+    font-size: 26px;
+    color: #d92c2c;
+    margin-bottom: 20px;
+}
+.thought-content {
+    font-size: 16px;
+    line-height: 1.9;
+    /* color: #333; */
+    margin-bottom: 30px;
+}
+
+/* 四张图片并排布局 */
+.heritage-images-row {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+.heritage-images-row img {
+    flex: 1;
+    min-width: 22%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: 0.25s;
+}
+.heritage-images-row img:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}

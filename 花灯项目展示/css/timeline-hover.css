@@ -1,0 +1,61 @@
+/* 时间轴悬停专用 —— 完全不覆盖时间轴 */
+.ruler-timeline {
+  margin: 150px auto 200px auto !important;
+}
+
+/* 图片：在时间轴【上方】，完全分开 */
+.hover-images {
+  position: absolute;
+  left: 50%;
+  top: -130px;    /* 往上走，远离时间轴 */
+  transform: translateX(-50%);
+  display: none;
+  justify-content: center;
+  gap: 10px;
+  width: max-content;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* 文字：在时间轴【下方】，完全分开 */
+.hover-text {
+  position: absolute;
+  left: 50%;
+  bottom: -240px;  /* 往下走，远离时间轴 */
+  transform: translateX(-50%);
+  width: 380px;
+  padding: 18px;
+  background: rgba(15,13,11,0.95);
+  border: 1px solid rgba(250,214,137,0.3);
+  border-radius: 8px;
+  color: #d4c0a1;
+  font-size: 14px;
+  line-height: 1.6;
+  display: none;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hover-text h3 {
+  color: #fad689;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.hover-img-item {
+  width: 150px;
+  height: 100px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.hover-img-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ruler-dot,
+.ruler-year {
+  cursor: pointer;
+}
